@@ -2,8 +2,13 @@
 
 .transactions-body {
     margin: 24px;
+    display: flex;
+    justify-content: center;
     .MuiTableCell-head {
         font-size: 16px;
+    }
+    .transaction-table-wrapper {
+        width: 100%;
     }
     .transaction-row {
         background-color: #FBFAF9;
