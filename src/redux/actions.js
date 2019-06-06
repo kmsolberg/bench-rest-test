@@ -7,35 +7,52 @@ export const getAllTransactions = (transactions, accountBalance) => {
 }
 
 export const fetchTransactions = (page) => {
-    var allTransactions = [];
-    console.log('did I run?');
+    let pagesRequired = 0;
+    let pageRequests = [];
     return(dispatch) => {
-        console.log(page)
-        return fetch(`http://resttest.bench.co/transactions/${page || 1}.json`)
+        fetch(`http://resttest.bench.co/transactions/1.json`)
         .then((res) => {
-            console.log('result', res)
-            return res.json();
+            if(res.ok) {
+                return res.json();
+            } else {
+                throw Error(`Request rejected with status ${res.status}`);
+            }
         })
         .then((data) => {
-            const totalTransactions = data.totalCount
-            console.log(data)
-            allTransactions = allTransactions.concat(data.transactions)
-            if (allTransactions.length < totalTransactions) {
-                console.log('again!', allTransactions)
-                fetchTransactions(data.page + 1)
-            // } else {
+            // Find the max number of pages required
+            pagesRequired = Math.ceil(data.totalCount / 10);
+            // Make an array of each URL needed for all pages
+            for (let i=1; i<= pagesRequired;i++) {
+                pageRequests.push(`http://resttest.bench.co/transactions/${i}.json`)
             }
-            // Use reduce to add all of the transaction amounts together
-            const sumAll = (array, prop) => array.reduce((a, b) => +a + +b[prop], 0);
-            const accountBalance = sumAll(allTransactions, 'Amount')
+            // Use Promise.all to make all requests before reutrning data
+            Promise.all(pageRequests.map(request =>
+                fetch(request)
+                  .then((res) => {
+                    if(res.ok) {
+                        return res.json();
+                    } else {
+                        throw Error(`Request rejected with status ${res.status}`);
+                    }
+                  })
+              ))
+              .then(data => {
+                let allTransactions = [];
+                data.map(page => (
+                    allTransactions = allTransactions.concat(page.transactions)
+                ));
+                // Use reduce to add all of the transaction amounts together
+                const sumAll = (array, prop) => array.reduce((a, b) => +a + +b[prop], 0);
+                const accountBalance = sumAll(allTransactions, 'Amount')
                 // Make it into a currency
                 .toLocaleString('en-CA', { style: 'currency', currency: 'CAD' });
-
-            // Send array with all transactions and account balance to the reducer
-            dispatch(getAllTransactions(allTransactions, accountBalance));
+                
+                // Send array with all transactions and account balance to the reducer
+                dispatch(getAllTransactions(allTransactions, accountBalance));
+            })
         })
         .catch(err => {
-            console.log(err)
+            console.log('There was a problem with your call', err.message)
         });
     }
 }
