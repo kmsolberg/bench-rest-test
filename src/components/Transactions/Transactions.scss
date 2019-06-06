@@ -2,4 +2,14 @@
 
 .transactions-body {
     margin: 24px;
+    .transaction-row {
+        background-color: #FBFAF9;
+        .grey-cell {
+            color: #9D9C9F;
+        }
+        &:hover th,
+        &:hover td{
+            color: $green-theme;
+        }
+    }
 }

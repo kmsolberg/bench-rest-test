@@ -7,30 +7,33 @@ import { Table,
     Paper
  } from '@material-ui/core';
 
-const TransactionsTable = () => (
+import moment from 'moment';
+
+const TransactionsTable = ({ transactions }) => (
     <Paper>
         <Table>
             <TableHead>
                 <TableRow>
-                <TableCell align="center">Date</TableCell>
-                <TableCell align="center">Company</TableCell>
-                <TableCell align="center">Account</TableCell>
+                <TableCell align="left">Date</TableCell>
+                <TableCell align="left">Company</TableCell>
+                <TableCell align="left">Account</TableCell>
                 {/* TODO Add Total */}
-                <TableCell align="center">Total</TableCell>
+                <TableCell align="right">Total</TableCell>
                 </TableRow>
             </TableHead>
             <TableBody>
-                {/* {rows.map(row => (
-                <TableRow key={row.name}>
-                    <TableCell component="th" scope="row">
-                    {row.name}
+                {transactions.map((row, index) => (
+                <TableRow key={row.Company + index} className="transaction-row">
+                    <TableCell component="th" scope="row" className="grey-cell">
+                        {moment(row.Date).format('MMM Do, YYYY')}
                     </TableCell>
-                    <TableCell align="right">{row.calories}</TableCell>
-                    <TableCell align="right">{row.fat}</TableCell>
-                    <TableCell align="right">{row.carbs}</TableCell>
-                    <TableCell align="right">{row.protein}</TableCell>
+                    <TableCell align="left">{row.Company}</TableCell>
+                    <TableCell align="left" className="grey-cell">{row.Ledger}</TableCell>
+                    <TableCell align="right">
+                        {Number(row.Amount).toLocaleString('en-CA', { style: 'currency', currency: 'CAD' })}
+                    </TableCell>
                 </TableRow>
-                ))} */}
+                ))}
             </TableBody>
         </Table>
     </Paper>
