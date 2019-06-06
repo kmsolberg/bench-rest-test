@@ -2,8 +2,8 @@
 export const REQUEST_TRANSACTIONS = 'REQUEST_TRANSACTIONS';
 
 // Action creators
-export const getAllTransactions = (transactions) => {
-    return { type: 'REQUEST_TRANSACTIONS', transactions }
+export const getAllTransactions = (transactions, accountBalance) => {
+    return { type: 'REQUEST_TRANSACTIONS', transactions, accountBalance }
 }
 
 export const fetchTransactions = (page) => {
@@ -25,7 +25,14 @@ export const fetchTransactions = (page) => {
                 fetchTransactions(data.page + 1)
             // } else {
             }
-            dispatch(getAllTransactions(allTransactions));
+            // Use reduce to add all of the transaction amounts together
+            const sumAll = (array, prop) => array.reduce((a, b) => +a + +b[prop], 0);
+            const accountBalance = sumAll(allTransactions, 'Amount')
+                // Make it into a currency
+                .toLocaleString('en-CA', { style: 'currency', currency: 'CAD' });
+
+            // Send array with all transactions and account balance to the reducer
+            dispatch(getAllTransactions(allTransactions, accountBalance));
         })
         .catch(err => {
             console.log(err)

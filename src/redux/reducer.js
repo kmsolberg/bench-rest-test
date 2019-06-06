@@ -1,6 +1,7 @@
 const initialState = {
     loading: true,
     transactions: [],
+    accountBalance: 0,
 };
 
 function restTest(state = initialState, action) {
@@ -9,6 +10,7 @@ function restTest(state = initialState, action) {
             return {
                 ...state,
                 transactions: action.transactions,
+                accountBalance: action.accountBalance,
             };
         default:
             return state;

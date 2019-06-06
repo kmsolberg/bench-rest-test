@@ -2,6 +2,9 @@
 
 .transactions-body {
     margin: 24px;
+    .MuiTableCell-head {
+        font-size: 16px;
+    }
     .transaction-row {
         background-color: #FBFAF9;
         .grey-cell {

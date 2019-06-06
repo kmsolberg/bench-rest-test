@@ -9,11 +9,12 @@ class Transactions extends Component {
         this.props.dispatch(fetchTransactions());
     }
     render() {
-        const { transactions } = this.props;
+        const { transactions, accountBalance } = this.props;
         return (
             <div className="transactions-body">
                 <TransactionsTable
                     transactions={transactions}
+                    accountBalance={accountBalance}
                 />
             </div>
         )
@@ -22,6 +23,7 @@ class Transactions extends Component {
 
 const mapStateToProps = (state) => ({
     transactions: state.transactions,
+    accountBalance: state.accountBalance,
 })
 
 export default connect(mapStateToProps)(Transactions);

@@ -9,7 +9,7 @@ import { Table,
 
 import moment from 'moment';
 
-const TransactionsTable = ({ transactions }) => (
+const TransactionsTable = ({ transactions, accountBalance }) => (
     <Paper>
         <Table>
             <TableHead>
@@ -17,8 +17,7 @@ const TransactionsTable = ({ transactions }) => (
                 <TableCell align="left">Date</TableCell>
                 <TableCell align="left">Company</TableCell>
                 <TableCell align="left">Account</TableCell>
-                {/* TODO Add Total */}
-                <TableCell align="right">Total</TableCell>
+                <TableCell align="right">{accountBalance}</TableCell>
                 </TableRow>
             </TableHead>
             <TableBody>
